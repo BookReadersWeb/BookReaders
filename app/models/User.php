@@ -1,8 +1,16 @@
 <?php
 
+namespace models;
+use PDO;
+
+require_once 'Database.php';
+
 class User
 {  
-    private $db;
+    private $conn;
+    private $table_name = "users";
+
+    // Propiedades del usuario
     private $user_id;
     private $username;
     private $email;
@@ -13,7 +21,7 @@ class User
     public function __construct()
     {
         $database = new Database();
-        $this->db = $database->connect();
+        $this->conn = $database->getConnection();
     }
 
     //Method to create a new user in the database
@@ -22,6 +30,8 @@ class User
         try {
             //Check if username or email already exist
             if ($this->isUsernameExists($username) || $this->isEmailExists($email)) {
+                
+                //TODO - Necesitamos caso por caso para saber si el USER o el EMAIL ya existen
                 return false;
             }
 
@@ -96,6 +106,8 @@ class User
         try {
             //Check if the username or email already exists for other users
             if ($this->isUsernameExistsForUpdate($user_id, $username) || $this->isEmailExistsForUpdate($user_id, $email)) {
+                
+                //TODO - Necesitamos caso por caso para saber si el USER o el EMAIL ya existen
                 return false;
             }
 
@@ -154,6 +166,7 @@ class User
     //Method to check if a username already exists in the database when updating
     private function isUsernameExistsForUpdate($user_id, $username)
     {
+        //TODO - Diria que es el mismo que el de arriba isUsernameExists. Lo revisamos
         $stmt = $this->db->prepare("SELECT * FROM users WHERE username = :username AND user_id != :user_id");
         $stmt->bindParam(':username', $username);
         $stmt->bindParam(':user_id', $user_id);
@@ -165,6 +178,7 @@ class User
     //Method to check if an email already exists in the database when updating
     private function isEmailExistsForUpdate($user_id, $email)
     {
+        //TODO - Diria que es el mismo que el de arriba isEmailExists. Lo revisamos
         $stmt = $this->db->prepare("SELECT * FROM users WHERE email = :email AND user_id != :user_id");
         $stmt->bindParam(':email', $email);
         $stmt->bindParam(':user_id', $user_id);
