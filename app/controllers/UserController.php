@@ -27,4 +27,16 @@ class UserController
         }
     }
 
+    public function isUsernameExists($username)
+    {
+        //TODO - Funcional pero mal implementado
+        return $this->userModel->isUsernameExists($username);
+    }
+
+    public function isEmailExists($email)
+    {
+        //TODO - Funcional pero mal implementado
+        return $this->userModel->isEmailExists($email);
+    }
+
 }
