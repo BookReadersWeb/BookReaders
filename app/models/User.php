@@ -28,11 +28,16 @@ class User
     public function createUser($username, $email, $password, $role)
     {
         try {
-            //Check if username or email already exist
-            if ($this->isUsernameExists($username) || $this->isEmailExists($email)) {
+            //Check if username already exist
+            if ($this->isUsernameExists($username)) {
                 
-                //TODO - Necesitamos caso por caso para saber si el USER o el EMAIL ya existen
-                return false;
+                return ["success" => false, "message" => "El nombre de usuario ya existe."];
+            }
+
+            //Check if email already exist
+            if ($this->isEmailExists($email)) {
+                
+                return return ["success" => false, "message" => "El correo electrónico ya está registrado."];
             }
 
             //Prepare the query to insert a new user
@@ -104,11 +109,16 @@ class User
     public function updateUser($user_id, $username = null, $email = null, $password = null, $role = null)
     {
         try {
-            //Check if the username or email already exists for other users
-            if ($this->isUsernameExistsForUpdate($user_id, $username) || $this->isEmailExistsForUpdate($user_id, $email)) {
+            //Check if the username already exists for other users
+            if ($this->isUsernameExists($username)) {
                 
-                //TODO - Necesitamos caso por caso para saber si el USER o el EMAIL ya existen
-                return false;
+                return ["success" => false, "message" => "El nombre de usuario ya existe."];
+            }
+
+            //Check if the email already exists for other users
+            if ($this->isEmailExists($email)) {
+                
+                return ["success" => false, "message" => "El correo electrónico ya está registrado."];
             }
 
             //Prepare the query to update user information
@@ -158,30 +168,6 @@ class User
     {
         $stmt = $this->db->prepare("SELECT * FROM users WHERE email = :email");
         $stmt->bindParam(':email', $email);
-        $stmt->execute();
-
-        return $stmt->rowCount() > 0;
-    }
-
-    //Method to check if a username already exists in the database when updating
-    private function isUsernameExistsForUpdate($user_id, $username)
-    {
-        //TODO - Diria que es el mismo que el de arriba isUsernameExists. Lo revisamos
-        $stmt = $this->db->prepare("SELECT * FROM users WHERE username = :username AND user_id != :user_id");
-        $stmt->bindParam(':username', $username);
-        $stmt->bindParam(':user_id', $user_id);
-        $stmt->execute();
-
-        return $stmt->rowCount() > 0;
-    }
-
-    //Method to check if an email already exists in the database when updating
-    private function isEmailExistsForUpdate($user_id, $email)
-    {
-        //TODO - Diria que es el mismo que el de arriba isEmailExists. Lo revisamos
-        $stmt = $this->db->prepare("SELECT * FROM users WHERE email = :email AND user_id != :user_id");
-        $stmt->bindParam(':email', $email);
-        $stmt->bindParam(':user_id', $user_id);
         $stmt->execute();
 
         return $stmt->rowCount() > 0;
