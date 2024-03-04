@@ -8,15 +8,8 @@ use controllers\UserController;
 
 session_start();
 
-if (isset($_SESSION['success']) || isset($_SESSION['alert'])) {
-    unset($_POST['username']);
-    unset($_POST['email']);
-    unset($_POST['password']);
-    unset($_POST['repeatPassword']);
-    unset($_POST['role']);
-    unset($_SESSION['alert']);
-    unset($_SESSION['success']);
-}
+unset($_SESSION['success']);
+unset($_SESSION['alert']);
 
 if (!empty($_POST['username']) && !empty($_POST['email']) && !empty($_POST['password']) && !empty($_POST['repeatPassword'])){
     
