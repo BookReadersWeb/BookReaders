@@ -11,17 +11,17 @@ class AuthController
     {
         $this->userModel =  $user;
     }
-	public function login($email, $password)
+	public function login()
 	{
 		//security
-		$email = htmlspecialchars(strip_tags($email));
-		$password = htmlspecialchars(strip_tags($password));
+		$email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
+		$password = filter_var($_POST['password'], FILTER_SANITIZE_STRING);
 
 		$userData = $this->userModel->readByUsernameOrEmail($email);
 
 		if (!$userData) {
 			echo "Usuario no encontrado";
-			die();
+			return false;
 		}
 		if (password_verify($password, $userData['password'])) 
 		{
