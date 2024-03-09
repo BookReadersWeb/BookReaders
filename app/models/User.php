@@ -33,6 +33,7 @@ class User
             //Check if username or email already exist
             if ($this->isUsernameExists($this->username) || $this->isEmailExists($this->email)) {
                 //TODO - Necesitamos caso por caso para saber si el USER o el EMAIL ya existen
+                //* Ya esta adaptado para que muestre el mensaje correcto en el modelo register.php, se puede borrar esto
                 // echo "El usuario o el email ya existen";
                 return false;
             }

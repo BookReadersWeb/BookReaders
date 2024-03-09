@@ -1,3 +1,22 @@
+<?php
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    require_once '../app/models/User.php';
+    require_once '../app/controllers/UserController.php';
+    require_once '../app/controllers/AuthController.php';
+
+    $user = new models\User();
+    $authController = new controllers\AuthController($user);
+
+    if ($authController->login()) {
+        header('Location: home');
+    } else {
+        $errorMessage = "Usuario o contraseña incorrectos";
+    }
+}
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -16,7 +35,7 @@
                         <h3 class="text-center">Login</h3>
                     </div>
                     <div class="card-body">
-                        <form action="home" method="POST">
+                        <form action="" method="POST">
                             <div class="mb-3">
                                 <label for="email" class="form-label">Email</label>
                                 <input type="email" class="form-control" id="email" name="email" required>
@@ -28,6 +47,12 @@
                             <div class="d-grid">
                                 <button type="submit" class="btn btn-primary">Login</button>
                             </div>
+
+                            <?php
+                            if (!empty($errorMessage)) {
+                                echo "<div class='alert alert-danger mt-3' role='alert'>$errorMessage</div>";
+                            }
+                            ?>
 
                             <div class="text-center mt-3">
                                 <a href="register">Registrarse</a>

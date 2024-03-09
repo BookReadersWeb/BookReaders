@@ -9,7 +9,7 @@ class UserController
 
     public function __construct(User $user)
     {
-        $this->userModel =  new $user;
+        $this->userModel = new $user;
     }
 
     public function createUser($username, $email, $password, $role)
