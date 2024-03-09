@@ -27,7 +27,7 @@ if (!isset($_SESSION['userData']) || empty($_SESSION['userData']['username'])) {
                 <div class="card">
                     <div class="card-body d-flex justify-content-between">
                         <h2 class="card-title">¡Bienvenido, <?php echo htmlspecialchars($userData['username']); ?>!</h2>
-                        <form action="logout.php" method="post">
+                        <form action="logout" method="post" onsubmit="return confirm('¿Estás seguro de que quieres cerrar tu sesión?');">
                             <button type="submit" class="btn btn-danger">Cerrar sesión</button>
                         </form>
                     </div>
