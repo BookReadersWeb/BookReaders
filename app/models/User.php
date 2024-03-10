@@ -3,7 +3,9 @@
 namespace models;
 use PDO;
 
-require_once 'Database.php';
+require_once "../app/config/Database.php";
+
+use config\Database;
 
 class User
 {  
@@ -11,11 +13,11 @@ class User
     private $table_name = "users";
 
     // Propiedades del usuario
-    private $user_id;
-    private $username;
-    private $email;
-    private $password;
-    private $role;
+    public $user_id;
+    public $username;
+    public $email;
+    public $password;
+    public $role;
 
     //Constructor to connect to the database
     public function __construct()
@@ -25,7 +27,7 @@ class User
     }
 
     //Method to create a new user in the database
-    public function createUser($username, $email, $password, $role)
+    public function createUser()
     {
         try {
             //Check if username already exist
@@ -39,16 +41,32 @@ class User
                 
                 return return ["success" => false, "message" => "El correo electrónico ya está registrado."];
             }
+            
+            $query = "INSERT INTO " . $this->table_name . " (username, email, password, role) VALUES (:username, :email, :password, :role)";
+            
+            // Preparamos la sentencia SQL para insertar los datos
+            $stmt = $this->conn->prepare($query);
+            
+            // Sanitizar los datos
+            $this->username = htmlspecialchars(strip_tags($this->username));
+            $this->email = htmlspecialchars(strip_tags($this->email));
+            $this->password = htmlspecialchars(strip_tags($this->password));
+            $this->role = htmlspecialchars(strip_tags($this->role));
+            
+            // Vincular los datos
+            $stmt->bindParam(':username', $this->username);
+            $stmt->bindParam(':email', $this->email);
+            $password_hash = password_hash($this->password, PASSWORD_DEFAULT);
+            $stmt->bindParam(':password', $password_hash);
+            $stmt->bindParam(':role', $this->role);
 
-            //Prepare the query to insert a new user
-            $stmt = $this->db->prepare("INSERT INTO users (username, email, password, role) VALUES (:username, :email, :password, :role)");
-            $stmt->bindParam(':username', $username);
-            $stmt->bindParam(':email', $email);
-            $stmt->bindParam(':password', $password);
-            $stmt->bindParam(':role', $role);
-            $stmt->execute();
-
-            return true;
+            // Ejecutar la consulta
+            if($stmt->execute()) {
+                return true;
+            }
+            
+            return false;
+            
         } catch (PDOException $e) {
             echo "Error al crear usuario: " . $e->getMessage();
             die();
@@ -60,7 +78,7 @@ class User
     {
         try {
             //Prepare the query to get a user by their ID
-            $stmt = $this->db->prepare("SELECT * FROM users WHERE user_id = :user_id");
+            $stmt = $this->conn->prepare("SELECT * FROM users WHERE user_id = :user_id");
             $stmt->bindParam(':user_id', $user_id);
             $stmt->execute();
 
@@ -77,7 +95,7 @@ class User
     {
         try {
             //Prepare the query to obtain a user by their username or email
-            $stmt = $this->db->prepare("SELECT * FROM users WHERE username = :identifier OR email = :identifier");
+            $stmt = $this->conn->prepare("SELECT * FROM users WHERE username = :identifier OR email = :identifier");
             $stmt->bindParam(':identifier', $identifier);
             $stmt->execute();
 
@@ -94,7 +112,7 @@ class User
     {
         try {
             //Prepare the query to obtain a user by their username or email
-            $stmt = $this->db->prepare("SELECT * FROM users");
+            $stmt = $this->conn->prepare("SELECT * FROM users");
             $stmt->execute();
 
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -122,7 +140,7 @@ class User
             }
 
             //Prepare the query to update user information
-            $stmt = $this->db->prepare("UPDATE users SET username = COALESCE(:username, username), email = COALESCE(:email, email), password = COALESCE(:password, password), role = COALESCE(:role, role) WHERE user_id = :user_id");
+            $stmt = $this->conn->prepare("UPDATE users SET username = COALESCE(:username, username), email = COALESCE(:email, email), password = COALESCE(:password, password), role = COALESCE(:role, role) WHERE user_id = :user_id");
             $stmt->bindParam(':username', $username);
             $stmt->bindParam(':email', $email);
             $stmt->bindParam(':password', $password);
@@ -142,7 +160,7 @@ class User
     {
         try {
             //Prepare the query to delete a user by their ID
-            $stmt = $this->db->prepare("DELETE FROM users WHERE user_id = :user_id");
+            $stmt = $this->conn->prepare("DELETE FROM users WHERE user_id = :user_id");
             $stmt->bindParam(':user_id', $user_id);
             $stmt->execute();
 
@@ -154,9 +172,9 @@ class User
     }
 
     //Method to check if a username already exists in the database
-    private function isUsernameExists($username)
+    public function isUsernameExists($username)
     {
-        $stmt = $this->db->prepare("SELECT * FROM users WHERE username = :username");
+        $stmt = $this->conn->prepare("SELECT * FROM users WHERE username = :username");
         $stmt->bindParam(':username', $username);
         $stmt->execute();
 
@@ -164,9 +182,9 @@ class User
     }
 
     //Method to check if an email already exists in the database
-    private function isEmailExists($email)
+    public function isEmailExists($email)
     {
-        $stmt = $this->db->prepare("SELECT * FROM users WHERE email = :email");
+        $stmt = $this->conn->prepare("SELECT * FROM users WHERE email = :email");
         $stmt->bindParam(':email', $email);
         $stmt->execute();
 
