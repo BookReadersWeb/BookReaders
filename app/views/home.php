@@ -3,7 +3,7 @@
 session_start();
 
 if (!isset($_SESSION['userData']) || empty($_SESSION['userData']['username'])) {
-    header('Location: login.php');
+    header('Location: login');
     exit;
 } else {
     $userData = $_SESSION['userData'];
