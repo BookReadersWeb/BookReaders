@@ -14,15 +14,20 @@ if (!isset($_SESSION['userData']) || $_SESSION['userData']['role'] !== 'admin') 
 $userController = new controllers\UserController(new models\User());
 $users = $userController->readAllUsers();
 
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_user'])) {
-    $user_id = $_POST['user_id'];
-    
-    if ($userController->deleteUser($user_id)) {
-        echo "Usuario eliminado con éxito.";
-        header("Location: adminpanel");
-    } else {
-        echo "Error al eliminar el usuario.";
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (isset($_POST['delete_user'])) {
+        $user_id = $_POST['user_id'];
+        
+        if ($userController->deleteUser($user_id)) {
+            echo "Usuario eliminado con éxito.";
+            header("Location: adminpanel");
+            exit;
+        } else {
+            echo "Error al eliminar el usuario.";
+        }
+    } elseif (isset($_POST['edit_user'])) {
+        
+        header("Location: edit_user");
     }
 }
 
@@ -43,15 +48,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_user'])) {
 
     <?php if (!empty($users)): ?>
         <ul>
-            <?php foreach ($users as $usern): ?>
+            <?php foreach ($users as $user): ?>
                 <li>
-                    <?php echo $usern['username']; ?> - <?php echo $usern['email']; ?>
-                    <form action="adminpanel" method="post" style="display: inline;">
-                        <input type="hidden" name="user_id" value="<?php echo $usern['user_id']; ?>">
-						<?php if ($usern['username'] !== 'admin'): ?>
-                        	<button type="submit" onclick="return confirm('¿Seguro que quieres eliminar este usuario?');" name="delete_user">Eliminar</button>
-						<?php endif; ?>
+                    <?php echo $user['username']; ?> - <?php echo $user['email']; ?>
+                    <span> -> <?php echo $user['role']; ?></span>
+                    <form class="d-inline" action="edit_user" method="post">
+                        <input type="hidden" name="user_id" value="<?php echo $user['user_id']; ?>">
+                        <?php if ($user['username'] !== 'admin'): ?>
+                            <button type="submit" name="edit_user">Editar</button>
+                        <?php endif; ?>
                     </form>
+                    <form class="d-inline" action="adminpanel" method="post">
+                        <input type="hidden" name="user_id" value="<?php echo $user['user_id']; ?>">
+                        <?php if ($user['username'] !== 'admin'): ?>
+                            <button type="submit" onclick="return confirm('¿Seguro que quieres eliminar este usuario?');" name="delete_user">Eliminar</button>
+						<?php endif; ?>
+                    </form>                    
                 </li>
             <?php endforeach; ?>
         </ul>
