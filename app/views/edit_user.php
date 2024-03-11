@@ -3,6 +3,13 @@
 require_once '../app/controllers/UserController.php';
 require_once '../app/models/User.php';
 
+session_start();
+
+if (!isset($_SESSION['userData']) || $_SESSION['userData']['role'] !== 'admin') {
+    header('Location: home');
+    exit;
+}
+
 $userController = new controllers\UserController(new models\User());
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
