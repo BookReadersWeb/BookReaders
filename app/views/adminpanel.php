@@ -10,11 +10,6 @@ if (!isset($_SESSION['userData']) || $_SESSION['userData']['role'] !== 'admin') 
     exit;
 }
 
-if ($userData['email'] !== 'admin@gmail.com' && $userData['username'] !== 'admin') {
-    // Redirige a la página de inicio si no tiene permisos de administrador
-    header('Location: home');
-    exit;
-}
 
 $userController = new controllers\UserController(new models\User());
 $users = $userController->readAllUsers();
