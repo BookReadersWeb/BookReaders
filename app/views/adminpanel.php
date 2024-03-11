@@ -46,6 +46,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body>
     <h2>Lista de Usuarios</h2>
 
+    <form action="register" method="post">
+        <button type="submit" name="add_user">Añadir Usuario</button>
+    </form>
+
     <?php if (!empty($users)): ?>
         <ul>
             <?php foreach ($users as $user): ?>

@@ -131,6 +131,7 @@ class User
             $stmt = $this->conn->prepare("UPDATE users SET username = COALESCE(:username, username), email = COALESCE(:email, email), password = COALESCE(:password, password), role = COALESCE(:role, role) WHERE user_id = :user_id");
             $stmt->bindParam(':username', $username);
             $stmt->bindParam(':email', $email);
+            $password = password_hash($password, PASSWORD_DEFAULT);
             $stmt->bindParam(':password', $password);
             $stmt->bindParam(':role', $role);
             $stmt->bindParam(':user_id', $user_id);
