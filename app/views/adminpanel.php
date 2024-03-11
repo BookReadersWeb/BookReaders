@@ -48,7 +48,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_user'])) {
                     <?php echo $usern['username']; ?> - <?php echo $usern['email']; ?>
                     <form action="adminpanel" method="post" style="display: inline;">
                         <input type="hidden" name="user_id" value="<?php echo $usern['user_id']; ?>">
-                        <button type="submit" onclick="return confirm('¿Seguro que quieres eliminar este usuario?');" name="delete_user">Eliminar</button>
+						<?php if ($usern['username'] !== 'admin'): ?>
+                        	<button type="submit" onclick="return confirm('¿Seguro que quieres eliminar este usuario?');" name="delete_user">Eliminar</button>
+						<?php endif; ?>
                     </form>
                 </li>
             <?php endforeach; ?>
