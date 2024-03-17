@@ -52,75 +52,55 @@ if (!empty($_POST['username']) && !empty($_POST['email']) && !empty($_POST['pass
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="lib/bootstrap-5.3.3/css/bootstrap.min.css">
     <link rel="stylesheet" href="css/styles.css">
     <title>Register</title>
 </head>
-<body class="d-flex align-items-center justify-content-center vh-100">
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="text-center">Registro de usuarios</h3>
-                    </div>
-                    <div class="card-body">
-                        <?php
-                            if (!empty($errorMessage)) {
-                                echo "<div class='alert alert-danger' role='alert'>$errorMessage</div>";
-                            } elseif (!empty($successMessage)) {
-                                echo "<div class='alert alert-success' role='alert'>$successMessage</div>";
-                            }
-                            else{
-                        ?>
-                        <form action="" method="POST">
-                            <div class="mb-3">
-                                <label for="username" class="form-label">Nombre</label>
-                                <input type="text" class="form-control" id="username" name="username" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="email" class="form-label">Email</label>
-                                <input type="email" class="form-control" id="email" name="email" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="password" class="form-label">Contraseña</label>
-                                <input type="password" class="form-control" id="password" name="password" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="repeatPassword" class="form-label">Repetir contraseña</label>
-                                <input type="password" class="form-control" id="repeatPassword" name="repeatPassword" required>
-                            </div>
-                            <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin') { ?>
-                            <div class="mb-3">
-                                <label for="role" class="form-label">Rol</label>
-                                <select class="form-select" id="role" name="role">
-                                    <option value="user">Usuario</option>
-                                    <option value="admin">Administrador</option>
-                                </select>
-                            </div>
-                            <?php } ?>
-                            <div class="d-grid">
-                                <button type="submit" class="btn btn-primary">Registrarse</button>
-                            </div>
-                        </form>
-                        <?php
-                            }
-                            ?>
-                        <div class="d-flex justify-content-center gap-5 mt-3">
-                            <?php if(isset($_SESSION['success']) || isset($_SESSION['alert'])) { ?>
-                            <a href="register">Volver</a>
-                            <?php
-                            }
-                            ?>
-                            <a href="login">Iniciar sesión</a>
-                        </div>
-                    </div>
+<body>
+    <div class="flex justify-center items-center h-screen">
+        <div class="bg-white p-8 rounded shadow-2xl w-1/3">
+            <h2 class="text-3xl font-bold mb-4">Register</h2>
+            <form action="" method="POST">
+                <div class="mb-4">
+                    <label for="username" class="block text-gray-700 text-sm font-bold mb-2">Nombre de usuario</label>
+                    <input type="text" class="border-2 border-gray-400 p-2 w-full" id="username" name="username" required>
                 </div>
-            </div>
-        </div>
-    </div>
+                <div class="mb-4">
+                    <label for="email" class="block text-gray-700 text-sm font-bold mb-2">Email</label>
+                    <input type="email" class="border-2 border-gray-400 p-2 w-full" id="email" name="email" required>
+                </div>
+                <div class="mb-4">
+                    <label for="password" class="block text-gray-700 text-sm font-bold mb-2">Contraseña</label>
+                    <input type="password" class="border-2 border-gray-400 p-2 w-full" id="password" name="password" required>
+                </div>
+                <div class="mb-4">
+                    <label for="repeatPassword" class="block text-gray-700 text-sm font-bold mb-2">Repetir contraseña</label>
+                    <input type="password" class="border-2 border-gray-400 p-2 w-full" id="repeatPassword" name="repeatPassword" required>
+                </div>
+                <div class="mb-4">
+                    <label for="role" class="block text-gray-700 text-sm font-bold mb-2">Rol</label>
+                    <select name="role" id="role" class="border-2 border-gray-400 p-2 w-full">
+                        <option value="user">Usuario</option>
+                        <option value="admin">Administrador</option>
+                    </select>
+                </div>
+                <div class="flex justify-center">
+                    <button type="submit"class="bg-blue-500 text-white p-2 w-full">Register</button>
+                </div>
 
-    <script src="lib/jquery-3.7.1/js/jquery-3.7.1.min.js"></script>
-    <script src="lib/bootstrap-5.3.3/js/bootstrap.min.js"></script>
+                <?php
+                if (!empty($successMessage)) {
+                    echo "<div class='text-green-600 mt-4'>$successMessage</div>";
+                } else if (!empty($errorMessage)) {
+                    echo "<div class='text-red-600 mt-4'>$errorMessage</div>";
+                }
+                ?>
+
+                <div class="text-center mt-3">
+                    <a href="login" class="text-indigo-600">Iniciar sesión</a>
+                </div>
+            </form>
+        </div>
+    </div>    
 </body>
+
 </html>
